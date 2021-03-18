@@ -54,7 +54,7 @@ public class ABRoutingFilter extends ZuulFilter {
         //0이면 새로운 서비스로 라우팅
         if(randomInt == 0) {
             HttpClient client = HttpClients.createDefault();
-            HttpGet request = new HttpGet("http://localhost:8081/hello");
+            HttpGet request = new HttpGet("http://new-member-service:8080/hello");
             MultiValueMap<String, String> requestHeaders = helper.buildZuulRequestHeaders(context.getRequest());
             try {
                 HttpResponse response = client.execute(request);
