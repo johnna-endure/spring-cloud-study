@@ -1,0 +1,72 @@
+version: "3.0"
+services:
+  zuul-server:
+    build: ./zuul-server
+    ports:
+      - 9000:9000
+    restart: on-failure
+    depends_on: 
+      - eureka-server
+
+  member-service:
+    build: ./memberservice
+    ports: 
+      - 8080:8080
+    restart: on-failure
+    depends_on: 
+      - eureka-server
+      - member-db
+
+  new-member-service:
+    build: ./new-member-service
+    ports:
+      - 8081:8080
+    restart: on-failure
+    depends_on: 
+      - eureka-server
+      - member-db
+
+  member-db:
+    image: mysql:8
+    ports: 
+      - 3307:3306
+    environment: 
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: sa
+      MYSQL_DATABASE: member_database
+    
+  team-service-1:
+    build: ./teamservice
+    ports:
+      - 8082:8081
+    restart: on-failure
+    depends_on: 
+      - eureka-server
+      - team-db
+  
+  team-service-2:
+    build: ./teamservice
+    ports:
+      - 8083:8081
+    restart: on-failure
+    depends_on: 
+      - eureka-server
+      - team-db
+  
+  team-db:
+    image: mysql:8
+    ports: 
+      - 3308:3306
+    environment: 
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: sa
+      MYSQL_DATABASE: team_database
+  
+  eureka-server:
+    build: ./eurekaserver
+    restart: on-failure
+    ports: 
+      - 8761:8761
+  

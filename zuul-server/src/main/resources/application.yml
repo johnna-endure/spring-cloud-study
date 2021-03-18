@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: zuul-server
+
+
+server:
+  port: 9000
+# eureka
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+
+# actuator
+management:
+  endpoint:
+    routes:
+      enabled: true
+    filters:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: routes, filters
+
+# zuul
+zuul:
+  prefix: /api
+  ignored-services: "*"
+  routes:
+    member-service:
+      path: /memberservice/**
+# 유레카 미등록 서비스. 도커-컴프즈에 없음. 따로 간단하게 생성
+#    hello:
+#      path: /helloservice/**
+#      url: http://localhost:9090
+#  host:
+#    connect-timeout-millis: 1000
+#    socket-timeout-millis: 1000
+
+hystrix:
+  command:
+    default:
+      excution.isolation.thread.timeoutInMilliseconds: 1000
+
+
+ribbon:
+  ReadTimeout: 1000
+  SocketTimeout: 1000
+
